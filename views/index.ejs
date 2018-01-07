@@ -1,13 +1,21 @@
 <% include partials/header %>
 
-<h1>Dashboard</h1>
 <div class="container">
-    <% projects.forEach(function(project){ %>
-        <img class="img-thumbnail" src="<%= project.image %>">
-        <h3><%= project.name %></h3>
-        <p><%= project.description %></p>
-        <h6><%= project.author %></h6>
-    <% }) %>
+    <h1>Dashboard</h1>
+    <div class="row">
+        <% projects.forEach(function(project){ %>
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img class="img-thumbnail" src="<%= project.image %>">
+                        <h3><%= project.name %></h3>
+                        <div class="caption">
+                            <p><%= project.description %></p>
+                        </div>
+                        <h6><%= project.author %></h6>
+                    </div>
+                </div>
+        <% }) %>
+    </div>
     <a class="btn btn-primary" href="/projects/new">Add a new Project</a>
 </div>
 
