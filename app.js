@@ -1,10 +1,20 @@
-var     express = require("express"),
-     bodyParser = require("body-parser");
+var express        = require("express"),
+    app            = express(),
+    bodyParser     = require("body-parser"),
+    mongoose       = require("mongoose"),
+    flash          = require("connect-flash"),
+    session        = require("express-session"),
+    passport       = require("passport"),
+    methodOverride = require("method-override"),
+    Project        = require("./models/project"),
+    LocalStrategy  = require("passport-local");
 
-var app = express();
-
+mongoose.connect("mongodb://localhost/project_app");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
+app.use(flash());
 
 // =================
 //      ROUTES
@@ -17,7 +27,37 @@ app.get("/", function(req, res){
 
 // INDEX - Show all the projects
 app.get("/projects", function(req, res){
-    res.render("index");
+    // Get All Projetcs from DB
+    Project.find({}, function(err, allProjects){
+        if (err) {
+            console.log(err);
+        } else {
+            res.render("index", {projects: allProjects});
+        }
+    });
+});
+
+// CREATE - Add a new project to the DB
+app.post("/projects", function(req, res){
+    var name = req.body.name;
+    var image = req.body.image;
+    var description = req.body.description;
+    var author = req.body.author;
+    var newProject = {name: name, image: image, description: description, author: author};
+    // Create new project and save on the db
+    Project.create(newProject, function(err, newlyCreated){
+        if (err) {
+            console.log(err);
+        } else {
+            // redirect
+            res.redirect("/projects");
+        }
+    });
+});
+
+// NEW - Show form to make a new project
+app.get("/projects/new", function(req, res) {
+    res.render("project/new");
 });
 
 // Tell express to listen for requests (start server)
