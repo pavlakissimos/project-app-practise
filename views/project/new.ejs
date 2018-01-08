@@ -1,11 +1,21 @@
 <% include ../partials/header %>
 
 <form action="/projects" method="POST">
-    <input type="text" name="name" placeholder="Name">
-    <input type="text" name="image" placeholder="Image">
-    <input type="text" name="author" placeholder="Author">
-    <input type="textarea" name="description" placeholder="Description">
-    <button>Submit</button>
+    <div class="container">
+        <div class="form-group">
+            <input class="form-control" type="text" name="name" placeholder="Name">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="image" placeholder="Image">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="author" placeholder="Author">
+        </div>
+        <div class="form-group">
+            <textarea class="form-control" name="description" placeholder="Description"></textarea>
+        </div>
+        <button class="btn btn-primary">Submit</button>    
+    </div>
 </form>
 
 <% include ../partials/footer %>
