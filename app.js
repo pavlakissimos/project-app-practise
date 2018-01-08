@@ -60,6 +60,18 @@ app.get("/projects/new", function(req, res) {
     res.render("project/new");
 });
 
+// SHOW - Show info about a project
+app.get("/projects/:id", function(req, res) {
+    Project.findById(req.params.id, function(err, foundProject){
+        if (err || !foundProject) {
+            console.log(err);
+            res.redirect("back");
+        } else {
+            res.render("project/show", {project: foundProject});
+        }
+    });
+});
+
 // Tell express to listen for requests (start server)
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("Server has started!");
