@@ -7,6 +7,7 @@ var express        = require("express"),
     passport       = require("passport"),
     methodOverride = require("method-override"),
     Project        = require("./models/project"),
+    Comment        = require("./models/comment"),
     LocalStrategy  = require("passport-local");
 
 mongoose.connect("mongodb://localhost/project_app");
@@ -62,12 +63,49 @@ app.get("/projects/new", function(req, res) {
 
 // SHOW - Show info about a project
 app.get("/projects/:id", function(req, res) {
-    Project.findById(req.params.id, function(err, foundProject){
+    Project.findById(req.params.id).populate("comments").exec(function(err, foundProject){
         if (err || !foundProject) {
             console.log(err);
             res.redirect("back");
         } else {
             res.render("project/show", {project: foundProject});
+        }
+    });
+});
+
+// ===================
+// COMMENT ROUTE
+// ===================
+
+// NEW - Show form to make a comment
+app.get("/projects/:id/comment/new", function(req, res) {
+    Project.findById(req.params.id, function(err, foundProject){
+        if (err || !foundProject) {
+            console.log(err);
+            res.redirect("back");
+        } else {
+            res.render("comment/new");
+        }
+    });
+});
+
+// CREATE - Create new comment on the DB
+app.get("/projects/:id/comment", function(req, res) {
+    Project.findById(req.params.id, function(err, foundProject) {
+        if (err || !foundProject) {
+            console.log(err);
+            res.redirect("back");
+        } else {
+            Comment.create(req.body.comment, function(err, comment){
+                if (err) {
+                    console.log(err);
+                } else {
+                    foundProject.comments.push(comment);
+                    foundProject.save();
+                    res.redirect("/projects/" + foundProject._id);
+                    console.log(foundProject);
+                }
+            });
         }
     });
 });
