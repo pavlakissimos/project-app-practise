@@ -84,13 +84,13 @@ app.get("/projects/:id/comment/new", function(req, res) {
             console.log(err);
             res.redirect("back");
         } else {
-            res.render("comment/new");
+            res.render("comment/new", {project: foundProject});
         }
     });
 });
 
 // CREATE - Create new comment on the DB
-app.get("/projects/:id/comment", function(req, res) {
+app.post("/projects/:id/comment", function(req, res) {
     Project.findById(req.params.id, function(err, foundProject) {
         if (err || !foundProject) {
             console.log(err);
@@ -100,10 +100,10 @@ app.get("/projects/:id/comment", function(req, res) {
                 if (err) {
                     console.log(err);
                 } else {
-                    foundProject.comments.push(comment);
+                    foundProject.comment.push(comment);
                     foundProject.save();
                     res.redirect("/projects/" + foundProject._id);
-                    console.log(foundProject);
+                    console.log(comment);
                 }
             });
         }
