@@ -10,6 +10,9 @@
             
         <h5><%= project.author %></h5>
     </div>
+    <% project.comment.forEach(function(comment){ %>
+           <p><%= comment.text %></p>
+    <% })%>
 </div>
 
 <% include ../partials/footer %>
