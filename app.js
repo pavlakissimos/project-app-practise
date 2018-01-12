@@ -1,25 +1,31 @@
-var express        = require("express"),
-    app            = express(),
-    bodyParser     = require("body-parser"),
-    mongoose       = require("mongoose"),
-    flash          = require("connect-flash"),
-    session        = require("express-session"),
-    passport       = require("passport"),
-    methodOverride = require("method-override"),
-    Project        = require("./models/project"),
-    Comment        = require("./models/comment"),
-    LocalStrategy  = require("passport-local");
+var express          = require("express"),
+    app              = express(),
+    bodyParser       = require("body-parser"),
+    expressSanitizer = require("express-sanitizer"),
+    mongoose         = require("mongoose"),
+    flash            = require("connect-flash"),
+    session          = require("express-session"),
+    passport         = require("passport"),
+    methodOverride   = require("method-override"),
+    Project          = require("./models/project"),
+    Comment          = require("./models/comment"),
+    LocalStrategy    = require("passport-local");
 
 mongoose.connect("mongodb://localhost/project_app");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
+app.use(expressSanitizer());
 app.use(flash());
 
 // =================
 //      ROUTES
 // =================
+
+// =====================
+// PROJECTS ROUTES
+// =====================
 
 // HOME - Landing page
 app.get("/", function(req, res){
@@ -73,9 +79,35 @@ app.get("/projects/:id", function(req, res) {
     });
 });
 
+// EDIT - Edit an existing project
+app.get("/projects/:id/edit", function(req, res) {
+    Project.findById(req.params.id, function(err, foundProject) {
+        if (err || !foundProject) {
+            res.redirect("back");
+        } else {
+            res.render("project/edit", {project: foundProject});
+        }
+    });
+});
+
+// UPDATE - Update the selected project
+app.put("/projects/:id", function(req, res){
+    req.body.project.body = req.sanitize(req.body.project.body);
+    Project.findByIdAndUpdate(req.params.id, req.body.project, function(err, updated){
+        if (err || !updated) {
+            console.log(err);
+            res.redirect("back");
+        } else {
+            res.redirect("/projects/" + req.params.id);
+        }
+    });
+});
+
 // ===================
-// COMMENT ROUTE
+// COMMENTS ROUTE
 // ===================
+
+// Comment {{ NEW and CREATE }} need fixing
 
 // NEW - Show form to make a comment
 app.get("/projects/:id/comment/new", function(req, res) {
@@ -100,7 +132,7 @@ app.post("/projects/:id/comment", function(req, res) {
                 if (err) {
                     console.log(err);
                 } else {
-                    foundProject.comment.push(comment);
+                    foundProject.comment.push(comment._id);
                     foundProject.save();
                     res.redirect("/projects/" + foundProject._id);
                     console.log(comment);
