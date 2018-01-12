@@ -1,19 +1,23 @@
 <% include partials/header %>
 
 <div class="container">
-    <h1>Dashboard</h1>
-    <div class="row text-center">
-        <!-- Display every object in the DB -->
+    <div class="row text-center" style="display: flex; flex-wrap: wrap;">
         <% projects.forEach(function(project){ %>
-                <div class="col-md-6 col-sm-12">
-                    <div class="thumbnail">
+                <div class="col-md-4">
+                    <div class="thumbnail">   
                         <img class="img-thumbnail" src="<%= project.image %>">
+                        
                         <h3><%= project.name %></h3>
+                        
+                        <h6>By <%= project.author %></h6>
+                        
                         <div class="caption">
-                            <p><%= project.description.substring(0, 100) %></p>
+                            <p>
+                                <%= project.description.substring(0, 100) %>
+                            </p>
                         </div>
-                        <h6><%= project.author %></h6>
-                            <a class="btn btn-primary" href="/projects/<%= project._id %>">More Info</a>
+                        
+                        <a class="btn btn-primary" href="/projects/<%= project._id %>">More Info</a>
                     </div>
                 </div>
         <% }) %>
