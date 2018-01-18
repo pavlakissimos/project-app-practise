@@ -69,7 +69,7 @@ app.get("/projects/new", function(req, res) {
 
 // SHOW - Show info about a project
 app.get("/projects/:id", function(req, res) {
-    Project.findById(req.params.id).populate("comments").exec(function(err, foundProject){
+    Project.findById(req.params.id).populate("comment").exec(function(err, foundProject){
         if (err || !foundProject) {
             console.log(err);
             res.redirect("back");
@@ -107,8 +107,6 @@ app.put("/projects/:id", function(req, res){
 // COMMENTS ROUTE
 // ===================
 
-// Comment {{ NEW and CREATE }} need fixing
-
 // NEW - Show form to make a comment
 app.get("/projects/:id/comment/new", function(req, res) {
     Project.findById(req.params.id, function(err, foundProject){
@@ -135,7 +133,6 @@ app.post("/projects/:id/comment", function(req, res) {
                     foundProject.comment.push(comment._id);
                     foundProject.save();
                     res.redirect("/projects/" + foundProject._id);
-                    console.log(comment);
                 }
             });
         }
