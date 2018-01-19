@@ -5,6 +5,7 @@ var projectSchema = new mongoose.Schema({
     name: String,
     image: String,
     description: String,
+    difficulty: String,
     comment: [
         {
             type: mongoose.Schema.Types.ObjectId,
