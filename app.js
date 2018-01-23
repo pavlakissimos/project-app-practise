@@ -4,11 +4,12 @@ var express          = require("express"),
     expressSanitizer = require("express-sanitizer"),
     mongoose         = require("mongoose"),
     flash            = require("connect-flash"),
-    session          = require("express-session"),
+    expressSession   = require("express-session"),
     passport         = require("passport"),
     methodOverride   = require("method-override"),
     Project          = require("./models/project"),
     Comment          = require("./models/comment"),
+    User             = require("./models/user"),
     LocalStrategy    = require("passport-local");
 
 mongoose.connect("mongodb://localhost/project_app");
@@ -18,6 +19,19 @@ app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
 app.use(flash());
+
+// PASSPORT CONFIGURATION
+app.use(expressSession({
+    secret: "Fly you fools!!!",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // =================
 //      ROUTES
@@ -138,6 +152,47 @@ app.post("/projects/:id/comment", function(req, res) {
         }
     });
 });
+
+// ==============
+// AUTH ROUTES
+// ==============
+
+// Register Route
+app.get("/register", function(req, res) {
+    res.render("register");
+});
+
+// Handling Register Logic
+app.post("/register", function(req, res) {
+    var newUser = new User({username: req.body.username});
+    User.register(newUser, req.body.password, function(err, user){
+        if (err || !user) {
+            res.redirect("back");
+        } else {
+            passport.authenticate("local")(req, res, function(){
+                res.redirect("/projects");
+            });
+        }
+    });
+});
+
+// Login Route
+app.get("/login", function(req, res) {
+    res.render("login");
+});
+
+// Handling Login logic
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/projects",
+    failureRedirect: "/back"
+}), function(req, res){
+});
+
+// Logout Route
+app.get("/logout", function(req, res) {
+    req.logout();
+    res.redirect("/projects");
+})
 
 // Tell express to listen for requests (start server)
 app.listen(process.env.PORT, process.env.IP, function(){
