@@ -1,0 +1,23 @@
+<% include partials/header %>
+
+<form action="/register" method="POST">
+    <div class="container">
+        <div class="text-center">
+            <h1>Sign Up</h1>
+        </div>
+        <hr>
+        <div class="form-group">
+            <h3>You are:</h3>
+            <input class="form-control" type="text" name="username" placeholder="How do you want to be called(eg. Username)">
+        </div>
+        
+        <div class="form-group">
+            <h3>Your password:</h3>
+            <input class="form-control" type="password" name="password" placeholder="Password">
+        </div>
+        
+        <button class="btn btn-primary">Submit</button>
+        </div>
+</form>
+
+<% include partials/footer %>
