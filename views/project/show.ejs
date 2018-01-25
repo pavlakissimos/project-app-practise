@@ -11,13 +11,19 @@
             
         <h5><strong><%= project.author %></strong> - Difficulty: <%= project.difficulty %></h5>
 
-        <a class="btn btn-success" href="/projects/<%= project._id %>/edit">Edit</a>
+        <a class="btn btn-warning" href="/projects/<%= project._id %>/edit">Edit</a>
     </div>
     
     <!--Show Comments-->
     <div class="container-fluid">
+        <a class="btn btn-success" href="/projects/<%= project._id %>/comment/new">Add a Comment</a>
         <% project.comment.forEach(function(comment){ %>
-               <p><strong><%= comment.author %></strong> - <%= comment.text %></p>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- THE AUTHOR IS NOT PASSED TO THE DB -->
+                <p><strong><%= comment.author %></strong> - <%= comment.text %></p>
+            </div>
+        </div>
         <% })%>
     </div>
 
