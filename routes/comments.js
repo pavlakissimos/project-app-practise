@@ -26,11 +26,15 @@ router.post("/", isLoggedIn, function(req, res) {
             console.log(err);
             res.redirect("back");
         } else {
-            // THE AUTHOR IS NOT PASSED IN THE DB
             Comment.create(req.body.comment, function(err, comment){
                 if (err) {
                     console.log(err);
                 } else {
+                    // Add user to comment
+                    comment.author.id = req.user._id;
+                    comment.author.username = req.user.username;
+                    // And save
+                    comment.save();
                     foundProject.comment.push(comment._id);
                     foundProject.save();
                     res.redirect("/projects/" + foundProject._id);

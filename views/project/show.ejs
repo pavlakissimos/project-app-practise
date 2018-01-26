@@ -20,8 +20,10 @@
         <% project.comment.forEach(function(comment){ %>
         <div class="row">
             <div class="col-md-12">
-                <!-- THE AUTHOR IS NOT PASSED TO THE DB -->
-                <p><strong><%= comment.author %></strong> - <%= comment.text %></p>
+                <strong><%= comment.author.username %></strong>
+                <p>
+                    <%= comment.text %>
+                </p>
             </div>
         </div>
         <% })%>
