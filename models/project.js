@@ -6,19 +6,19 @@ var projectSchema = new mongoose.Schema({
     image: String,
     description: String,
     difficulty: String,
-    comment: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment"
-        }
-        ],
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         },
-        username: String
-    }
+    username: String
+    },
+    comment: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment"
+        }
+        ]
 });
 
 module.exports = mongoose.model("Project", projectSchema);
