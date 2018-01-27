@@ -16,7 +16,7 @@ router.get("/", function(req, res){
         if (err) {
             console.log(err);
         } else {
-            res.render("index", {projects: allProjects});
+            res.render("project/index", {projects: allProjects});
         }
     });
 });
@@ -26,7 +26,10 @@ router.post("/", isLoggedIn, function(req, res){
     var name = req.body.name;
     var image = req.body.image;
     var description = req.body.description;
-    var author = req.body.author;
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    };
     var newProject = {name: name, image: image, description: description, author: author};
     // Create new project and save on the db
     Project.create(newProject, function(err, newlyCreated){
