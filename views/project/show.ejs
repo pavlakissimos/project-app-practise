@@ -9,7 +9,7 @@
         
         <p><%= project.description %></p>
             
-        <h5><strong><%= project.author %></strong> - Difficulty: <%= project.difficulty %></h5>
+        <h5><strong><%= project.author.username %></strong> - Difficulty: <%= project.difficulty %></h5>
 
         <a class="btn btn-warning" href="/projects/<%= project._id %>/edit">Edit</a>
     </div>
