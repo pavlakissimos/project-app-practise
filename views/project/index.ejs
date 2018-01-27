@@ -1,0 +1,29 @@
+<% include ../partials/header %>
+
+<div class="container">
+    <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+        <% projects.forEach(function(project){ %>
+                <div class="col-md-4">
+                    <div class="thumbnail">   
+                        <a href="/projects/<%= project._id %>">
+                            <img class="img-thumbnail" src="<%= project.image %>">
+                        </a>
+                        
+                        <h3><%= project.name %></h3>
+                        
+                        <h6>By <%= project.author.username %></h6>
+                        
+                        <div class="caption">
+                            <p>
+                                <%= project.description.substring(0, 100) %>
+                            </p>
+                        </div>
+                        
+                        <a class="btn btn-primary" href="/projects/<%= project._id %>">More Info</a>
+                    </div>
+                </div>
+        <% }) %>
+    </div>
+</div>
+
+<% include ../partials/footer %>
